@@ -10,10 +10,13 @@ def display_tredning_coins(search_trending):
     st.write("---")
     st.write("### Most Searched Tokens @ Coingecko")
     for coin in trending_coins:
-        coin_name = coin["item"]["name"]
+        coin_name = coin["item"]["id"]
         market_cap_rank = coin["item"]["market_cap_rank"]
         st.write(
-            f" **{coin_name}**                 - MarketCap rank: {market_cap_rank} Coingecko URL: [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
+            f"#### **{coin_name}**  \
+            >   \
+            > -  MarketCap rank: {market_cap_rank} \
+            > - Coingecko URL: [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
         )
 
 
@@ -23,7 +26,11 @@ def display_volume_data(coin_dict):
             usd_market_cap = int(coin_data["usd_market_cap"])
             usd_volume = int(coin_data["usd_24h_vol"])
             st.write(
-                f"**{coin_name}** - Market Cap: {usd_market_cap:,} \$ - 24h Volume: {usd_volume:,}  \$ - Coingecko URL: [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
+                f"#### **{coin_name}**  \
+                >   \
+                > - Market Cap: {usd_market_cap:,} \$ \
+                > - 24h Volume: {usd_volume:,}  \$ \
+                > - Coingecko URL: [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
             )
 
 
