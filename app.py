@@ -21,14 +21,15 @@ def display_tredning_coins(search_trending):
 
 def display_volume_data(coin_dict):
     for coin_name, coin_data in coin_dict.items():
-        if int(coin_data["usd_24h_vol"]) > int(coin_data["usd_market_cap"]):
-            usd_market_cap = int(coin_data["usd_market_cap"])
-            usd_volume = int(coin_data["usd_24h_vol"])
-            st.write(
-                f"##### **{coin_name.capitalize()}** - [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
-            )
-            st.markdown(f"- Market Cap: **{usd_market_cap:,} \$** ")
-            st.markdown(f"- 24h Volume: **{usd_volume:,}  \$** ")
+        if int(coin_data["usd_market_cap"]) > 0:
+            if int(coin_data["usd_24h_vol"]) > int(coin_data["usd_market_cap"]):
+                usd_market_cap = int(coin_data["usd_market_cap"])
+                usd_volume = int(coin_data["usd_24h_vol"])
+                st.write(
+                    f"##### **{coin_name.capitalize()}** - [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
+                )
+                st.markdown(f"- Market Cap: **{usd_market_cap:,} \$** ")
+                st.markdown(f"- 24h Volume: **{usd_volume:,}  \$** ")
 
 
 def fetch_data():
