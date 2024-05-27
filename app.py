@@ -4,16 +4,14 @@ from pycoingecko import CoinGeckoAPI
 coin_manager = CoinGeckoAPI()
 
 
-def display_tredning_coins(search_trending):
+def display_trending_coins(search_trending):
     trending_coins = search_trending["coins"]
-    trending_exchanges = search_trending["exchanges"]
     st.write("---")
-    st.write("### Most Searched Tokens @ Coingecko")
+    st.write("## Most Searched Tokens @ Coingecko")
     for coin in trending_coins:
         coin_id = coin["item"]["id"]
         coin_name = coin["item"]["name"]
         market_cap_rank = coin["item"]["market_cap_rank"]
-        st.write(f"##### **{coin_name}**")
         st.markdown(
             f"- [{ coin_name}](https://www.coingecko.com/en/coins/{coin_id})  -  MarketCap rank:   **{market_cap_rank}** "
         )
@@ -21,7 +19,7 @@ def display_tredning_coins(search_trending):
 
 def display_volume_data(coin_dict):
     for coin_name, coin_data in coin_dict.items():
-        if int(coin_data["usd_market_cap"]) > 0:
+        if coin_data and int(coin_data["usd_market_cap"]) > 0:
             if int(coin_data["usd_24h_vol"]) > int(coin_data["usd_market_cap"]):
                 usd_market_cap = int(coin_data["usd_market_cap"])
                 usd_volume = int(coin_data["usd_24h_vol"])
@@ -35,12 +33,12 @@ def display_volume_data(coin_dict):
 def fetch_data():
     search_trending = coin_manager.get_search_trending()
 
-    with open("coingecko_coin_names.txt") as f:
+    with open("token_ids.txt") as f:
         coin_list = f.read().splitlines()
 
-    first_coins_list = coin_list[0:400]
-    second_coins_list = coin_list[400:800]
-    third_coins_list = coin_list[800:]
+    first_coins_list = coin_list[0:350]
+    second_coins_list = coin_list[350:700]
+    third_coins_list = coin_list[700:]
 
     first_coins = coin_manager.get_price(
         ids=first_coins_list, include_market_cap=True, include_24hr_vol=True, vs_currencies="USD"
@@ -52,7 +50,7 @@ def fetch_data():
         ids=third_coins_list, include_market_cap=True, include_24hr_vol=True, vs_currencies="USD"
     )
 
-    display_tredning_coins(search_trending)
+    display_trending_coins(search_trending)
 
     st.write("---")
     st.write("### 24h Volume Higher than MarketCap")
