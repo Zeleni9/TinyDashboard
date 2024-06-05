@@ -48,14 +48,17 @@ def display_volume_data(coin_dict):
         if coin_data:
             usd_market_cap = coin_data.get("usd_market_cap")
             usd_24h_vol = coin_data.get("usd_24h_vol")
-
             
-            if usd_market_cap > 0 and usd_24h_vol > usd_market_cap:
-                st.write(
-                    f"##### **{coin_name.capitalize()}** - [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
-                )
-                st.markdown(f"- Market Cap: **{usd_market_cap:,} \$**")
-                st.markdown(f"- 24h Volume: **{usd_24h_vol:,} \$**")
+            if usd_market_cap and usd_24h_vol:
+                usd_market_cap = int(usd_market_cap)
+                usd_24h_vol = int(usd_24h_vol)
+                
+                if usd_market_cap > 0 and usd_24h_vol > usd_market_cap:
+                    st.write(
+                        f"##### **{coin_name.capitalize()}** - [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
+                    )
+                    st.markdown(f"- Market Cap: **{usd_market_cap:,} \$**")
+                    st.markdown(f"- 24h Volume: **{usd_24h_vol:,} \$**")
 
 
 def main():    
