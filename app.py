@@ -2,7 +2,7 @@ import streamlit as st
 from pycoingecko import CoinGeckoAPI
 import asyncio
 import aiohttp
-
+import time
 
 coin_manager = CoinGeckoAPI()
 
@@ -10,8 +10,13 @@ coin_manager = CoinGeckoAPI()
 async def fetch_price(session, ids):
     url = f"https://api.coingecko.com/api/v3/simple/price?ids={','.join(ids)}&include_market_cap=true&include_24hr_vol=true&vs_currencies=USD"
     async with session.get(url) as response:
-        return await response.json()
-
+        data = await response.json()
+        if "error_code" in data and data["error_code"] == 429:
+            st.error("Rate limit exceeded. Retrying in 60 seconds...")
+            time.sleep(60)  # Wait for 60 seconds before retrying
+            async with session.get(url) as retry_response:
+                data = await retry_response.json()
+        return data
 
 async def fetch_data():
     async with aiohttp.ClientSession() as session:
@@ -21,9 +26,14 @@ async def fetch_data():
             coin_list = f.read().splitlines()
         
         tasks = []
-        batch_size = 350
-        for i in range(0, len(coin_list), batch_size):
-            tasks.append(fetch_price(session, coin_list[i:i+batch_size]))
+        
+        # Define specific batch sizes
+        batch_sizes = [400, 400, 200]
+        start = 0
+        for batch_size in batch_sizes:
+            end = start + batch_size
+            tasks.append(fetch_price(session, coin_list[start:end]))
+            start = end
         
         results = await asyncio.gather(*tasks)
         
@@ -46,6 +56,10 @@ def display_trending_coins(search_trending):
 def display_volume_data(coin_dict):
     for coin_name, coin_data in coin_dict.items():
         if coin_data:
+            if "error_code" in coin_data and coin_data["error_code"] == 429:
+                st.warning(f"Rate limit exceeded for {coin_name}. Please try again later.")
+                continue
+            
             usd_market_cap = int(coin_data["usd_market_cap"])
             usd_24h_vol = int(coin_data["usd_24h_vol"])
             
