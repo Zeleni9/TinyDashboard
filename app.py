@@ -46,13 +46,10 @@ def display_trending_coins(search_trending):
 def display_volume_data(coin_dict):
     for coin_name, coin_data in coin_dict.items():
         if coin_data:
-            usd_market_cap = coin_data.get("usd_market_cap")
-            usd_24h_vol = coin_data.get("usd_24h_vol")
+            usd_market_cap = int(coin_data["usd_market_cap"])
+            usd_24h_vol = int(coin_data["usd_24h_vol"])
             
             if usd_market_cap and usd_24h_vol:
-                usd_market_cap = int(usd_market_cap)
-                usd_24h_vol = int(usd_24h_vol)
-                
                 if usd_market_cap > 0 and usd_24h_vol > usd_market_cap:
                     st.write(
                         f"##### **{coin_name.capitalize()}** - [{coin_name}](https://www.coingecko.com/en/coins/{coin_name})"
